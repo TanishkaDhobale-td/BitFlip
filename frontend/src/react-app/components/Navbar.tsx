@@ -9,7 +9,6 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/digital-twin", label: "Digital Twin" },
   { href: "/analytics", label: "Analytics" },
-  { href: "/feedback", label: "Feedback" },
 ];
 
 export default function Navbar() {

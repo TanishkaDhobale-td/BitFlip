@@ -8,36 +8,6 @@ import PageTransition from "@/react-app/components/PageTransition";
 import ScrollReveal from "@/react-app/components/ScrollReveal";
 import AnimatedCard from "@/react-app/components/AnimatedCard";
 
-const features = [
-  {
-    icon: Brain,
-    title: "AI-Powered Diagnostics",
-    description: "Advanced machine learning models analyze CNC behavior patterns to detect anomalies before they become failures.",
-  },
-  {
-    icon: Activity,
-    title: "Real-Time Monitoring",
-    description: "Continuous sensor data streaming with millisecond-level latency for immediate health status updates.",
-  },
-  {
-    icon: Shield,
-    title: "Training Safety",
-    description: "Protect students and trainees with intelligent safety alerts and automated emergency responses.",
-  },
-  {
-    icon: Wrench,
-    title: "Predictive Maintenance",
-    description: "Schedule maintenance proactively based on AI predictions, reducing downtime by up to 70%.",
-  },
-];
-
-const stats = [
-  { value: "99.7%", label: "Prediction Accuracy" },
-  { value: "70%", label: "Downtime Reduction" },
-  { value: "50+", label: "Sensor Types" },
-  { value: "24/7", label: "Monitoring" },
-];
-
 export default function HomePage() {
   return (
     <PageTransition>
@@ -133,54 +103,6 @@ export default function HomePage() {
                 <TrustBadge icon={Wrench} label="Predictive Maintenance" />
                 <TrustBadge icon={Shield} label="Training Safe" />
               </motion.div>
-            </div>
-          </div>
-        </section>
-
-        {/* Stats Section */}
-        <section className="py-16 bg-primary overflow-hidden">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {stats.map((stat, index) => (
-                <ScrollReveal key={index} delay={index * 0.1}>
-                  <div className="text-center">
-                    <div className="text-3xl sm:text-4xl font-bold text-white mb-2">{stat.value}</div>
-                    <div className="text-primary-foreground/80 text-sm sm:text-base">{stat.label}</div>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <ScrollReveal>
-              <div className="text-center mb-16">
-                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-                  Intelligent Monitoring Solutions
-                </h2>
-                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                  Our AI-driven platform provides comprehensive health monitoring for CNC machines in training environments.
-                </p>
-              </div>
-            </ScrollReveal>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {features.map((feature, index) => (
-                <AnimatedCard
-                  key={index}
-                  delay={index * 0.1}
-                  className="p-6 border-gray-100 group"
-                >
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
-                    <feature.icon className="w-6 h-6 text-primary group-hover:text-white transition-colors" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">{feature.description}</p>
-                </AnimatedCard>
-              ))}
             </div>
           </div>
         </section>

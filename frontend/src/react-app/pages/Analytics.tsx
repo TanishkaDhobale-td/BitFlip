@@ -288,7 +288,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Bottom Row */}
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid gap-6">
               {/* Future Failure Prediction */}
               <ScrollReveal>
                 <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
@@ -324,57 +324,6 @@ export default function AnalyticsPage() {
                 </motion.div>
               </ScrollReveal>
 
-              {/* AI Intelligence Explanation */}
-              <ScrollReveal delay={0.1}>
-                <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
-                  <Card className="p-6 bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20 hover:shadow-lg transition-shadow duration-300">
-                    <div className="flex items-center gap-2 mb-4">
-                      <motion.div 
-                        whileHover={{ rotate: 360 }} 
-                        transition={{ duration: 0.5 }}
-                      >
-                        <Brain className="w-5 h-5 text-primary" />
-                      </motion.div>
-                      <h3 className="text-lg font-semibold text-gray-900">How Our AI Works</h3>
-                    </div>
-                    
-                    <div className="space-y-4">
-                      <p className="text-gray-600">
-                        Our AI continuously learns from your CNC machine's behavior patterns to provide accurate predictions.
-                      </p>
-                      
-                      <div className="space-y-3">
-                        {[
-                          { step: 1, title: "Pattern Learning", desc: "AI establishes baseline normal behavior from sensor data" },
-                          { step: 2, title: "Anomaly Detection", desc: "Real-time comparison against learned patterns" },
-                          { step: 3, title: "Predictive Analysis", desc: "Machine learning models forecast potential failures" },
-                          { step: 4, title: "Continuous Improvement", desc: "Feedback loop refines predictions over time" },
-                        ].map((item, index) => (
-                          <motion.div 
-                            key={item.step} 
-                            className="flex items-start gap-3"
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1 }}
-                          >
-                            <motion.div 
-                              className="w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center flex-shrink-0"
-                              whileHover={{ scale: 1.2 }}
-                            >
-                              {item.step}
-                            </motion.div>
-                            <div>
-                              <p className="font-medium text-gray-900 text-sm">{item.title}</p>
-                              <p className="text-xs text-gray-600">{item.desc}</p>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-                  </Card>
-                </motion.div>
-              </ScrollReveal>
             </div>
           </div>
         </section>
