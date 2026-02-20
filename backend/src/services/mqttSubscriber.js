@@ -1,36 +1,45 @@
-// mqttSubscriber.js
+// backend/src/services/mqttSubscriber.js
+
 const mqtt = require("mqtt");
-require("dotenv").config();
+const { checkRPMThreshold } = require("./alertEngine");
 
 function initMQTT() {
-  const brokerUrl = process.env.MQTT_BROKER || "mqtt://localhost:1883";
+    if (process.env.MQTT_ENABLED !== "true") {
+        console.log("⚡ MQTT Disabled (Safe Mode)");
+        return;
+    }
 
-  const client = mqtt.connect(brokerUrl);
+    const brokerUrl = process.env.MQTT_BROKER || "mqtt://localhost:1883";
 
-  client.on("connect", () => {
-    console.log("✅ Connected to MQTT Broker");
+    const client = mqtt.connect(brokerUrl);
 
-    // Subscribe to CNC topic
-    client.subscribe("cnc/sensors", (err) => {
-      if (!err) {
-        console.log("📡 Subscribed to cnc/sensors");
-      } else {
-        console.error("❌ MQTT subscription error:", err.message);
-      }
+    client.on("connect", () => {
+        console.log("✅ Connected to MQTT Broker");
+        client.subscribe("spindle/rpm");
     });
-  });
 
-  client.on("message", (topic, message) => {
-    const data = message.toString();
-    console.log(`📥 Message received on ${topic}:`, data);
+    client.on("message", (topic, message) => {
+        const rpm = parseInt(message.toString());
+        console.log("📥 RPM:", rpm);
 
-    // Later: send to InfluxDB here
-  });
+        const alert = checkRPMThreshold(rpm);
 
-  client.on("error", (err) => {
-    console.error("❌ MQTT Error:", err.message);
-  });
+        console.log("🚨 Status:", alert.status);
+
+        // Emit to frontend
+        if (global.io) {
+            global.io.emit("rpm_update", {
+                rpm,
+                status: alert.status,
+                color: alert.color,
+                message: alert.message
+            });
+        }
+    });
+
+    client.on("error", (err) => {
+        console.error("❌ MQTT Error:", err.message);
+    });
 }
 
-module.exports = initMQTT;
-
+module.exports = { initMQTT };
