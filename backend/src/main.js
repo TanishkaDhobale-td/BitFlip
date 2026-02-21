@@ -28,7 +28,10 @@ app.use("/api/equipment", equipmentRoutes);
 
 // WebSocket
 const io = new Server(server, {
-  cors: { origin: "*" },
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+  },
 });
 
 global.io = io;
@@ -54,6 +57,17 @@ io.on("connection", (socket) => {
     console.log("🔴 Frontend disconnected:", socket.id);
   });
 });
+
+/*setInterval(() => {
+  console.log("Sending test socket data");
+  io.emit("mqttData", {
+    machineId: "TEST",
+    temperature: "99.99",
+    vibration: ,
+    spindleSpeed: ,
+    timestamp: new Date().toISOString(),
+  });
+}, 3000); */
 
 // MQTT INIT
 if (process.env.MQTT_ENABLED === "true") {
