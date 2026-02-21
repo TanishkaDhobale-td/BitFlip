@@ -4,7 +4,11 @@ const Equipment = require("../models/Equipment.model");
 exports.getAllEquipment = async (req, res) => {
   try {
     const equipment = await Equipment.find();
-    res.json(equipment);
+    res.json({
+      success: true,
+      count: equipment.length,
+      data: equipment
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

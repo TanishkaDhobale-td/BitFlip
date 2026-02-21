@@ -9,10 +9,10 @@ const equipmentRoutes = require("./routes/equipment.routes");
 const connectDB = require("./config/db");
 require("./config/influx"); // initialize influx
 
-const initMQTT = require("./services/mqttSubscriber");
+const { initMQTT } = require("./services/mqttSubscriber");
 
 // Routes
-const equipmentRoutes = require("./routes/equipment.routes");
+//const equipmentRoutes = require("./routes/equipment.routes");
 const sensorRoutes = require("./routes/sensors.routes");
 const predictionRoutes = require("./routes/prediction.routes");
 
@@ -64,9 +64,9 @@ if (process.env.MQTT_ENABLED === "true") {
 }
 
 // START SERVER
-
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
   console.log(`✅ Backend server running on port ${PORT}`);
 });
+

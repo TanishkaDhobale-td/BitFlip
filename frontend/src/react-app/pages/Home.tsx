@@ -15,12 +15,17 @@ export default function HomePage() {
   useEffect(() => {
     fetch("http://localhost:5000/api/equipment")
       .then(res => res.json())
-      .then(data => {
-        console.log("Backend Response:", data);
-        setEquipment(data.equipment);
+      .then(response => {
+        console.log("Backend Response:", response);
+
+        if (response.success) {
+          setEquipment(response.data);
+        } else {
+          console.error("Backend error:", response.message || "Unknown error");
+        }
       })
       .catch(err => console.error("Error:", err));
-  }, []);
+    }, []);
 
   return (
     <PageTransition>

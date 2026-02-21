@@ -1,30 +1,63 @@
-// mqttSubscriber.js
 const mqtt = require("mqtt");
-require("dotenv").config();
+
+let client;
 
 function initMQTT() {
-  const brokerUrl = process.env.MQTT_BROKER || "mqtt://localhost:1883";
+  const broker = process.env.MQTT_BROKER;
+  const topic = process.env.MQTT_TOPIC;
 
-  const client = mqtt.connect(brokerUrl);
+  if (!broker || !topic) {
+    console.error("❌ MQTT_BROKER or MQTT_TOPIC not defined in .env");
+    return;
+  }
+
+  client = mqtt.connect(broker, {
+    reconnectPeriod: 3000, // auto reconnect every 3 sec
+  });
 
   client.on("connect", () => {
-    console.log("✅ Connected to MQTT Broker");
+    console.log("✅ Connected to MQTT broker:", broker);
 
-    // Subscribe to CNC topic
-    client.subscribe("cnc/sensors", (err) => {
-      if (!err) {
-        console.log("📡 Subscribed to cnc/sensors");
+    client.subscribe(topic, (err) => {
+      if (err) {
+        console.error("❌ Subscription error:", err.message);
       } else {
-        console.error("❌ MQTT subscription error:", err.message);
+        console.log("📡 Subscribed to topic:", topic);
       }
     });
   });
 
-  client.on("message", (topic, message) => {
-    const data = message.toString();
-    console.log(`📥 Message received on ${topic}:`, data);
+  client.on("message", (receivedTopic, message) => {
+    try {
+      const rawData = message.toString();
+      console.log("📥 MQTT Raw:", rawData);
 
-    // Later: send to InfluxDB here
+      const parsedData = JSON.parse(rawData);
+
+      // Validate required fields
+      const safeData = {
+        machineId: parsedData.machineId || "Unknown",
+        temperature: parsedData.temperature || "0",
+        vibration: parsedData.vibration || "0",
+        spindleSpeed: parsedData.spindleSpeed || 0,
+        timestamp: parsedData.timestamp || new Date().toISOString(),
+      };
+
+      console.log("📤 Sending to frontend:", safeData);
+
+      if (global.io) {
+        global.io.emit("mqttData", safeData);
+      } else {
+        console.warn("⚠ global.io not initialized");
+      }
+
+    } catch (err) {
+      console.error("❌ Failed to parse MQTT message:", err.message);
+    }
+  });
+
+  client.on("reconnect", () => {
+    console.log("🔄 Reconnecting to MQTT broker...");
   });
 
   client.on("error", (err) => {
@@ -32,5 +65,4 @@ function initMQTT() {
   });
 }
 
-module.exports = initMQTT;
-
+module.exports = { initMQTT };
