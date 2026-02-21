@@ -1,7 +1,5 @@
-// ======================================
 // mqttSubscriber.js
 // CNC Sensor Data Listener
-// ======================================
 
 const mqtt = require("mqtt");
 const processSensorData = require("./dataProcessor");

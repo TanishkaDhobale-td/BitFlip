@@ -7,8 +7,21 @@ import TrustBadge from "@/react-app/components/TrustBadge";
 import PageTransition from "@/react-app/components/PageTransition";
 import ScrollReveal from "@/react-app/components/ScrollReveal";
 import AnimatedCard from "@/react-app/components/AnimatedCard";
+import { useEffect, useState } from "react";
 
 export default function HomePage() {
+
+  const [equipment, setEquipment] = useState<any[]>([]);
+  useEffect(() => {
+    fetch("http://localhost:5000/api/equipment")
+      .then(res => res.json())
+      .then(data => {
+        console.log("Backend Response:", data);
+        setEquipment(data.equipment);
+      })
+      .catch(err => console.error("Error:", err));
+  }, []);
+
   return (
     <PageTransition>
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">

@@ -4,6 +4,7 @@ const express = require("express");
 const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
+const equipmentRoutes = require("./routes/equipment.routes");
 
 const connectDB = require("./config/db");
 require("./config/influx"); // initialize influx
@@ -12,7 +13,7 @@ const initMQTT = require("./services/mqttSubscriber");
 
 // Routes
 const equipmentRoutes = require("./routes/equipment.routes");
-const sensorRoutes = require("./routes/sensor.routes");
+const sensorRoutes = require("./routes/sensors.routes");
 const predictionRoutes = require("./routes/prediction.routes");
 
 const app = express();
@@ -21,6 +22,9 @@ const server = http.createServer(app);
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+app.use("/api/equipment", equipmentRoutes);
+
 
 // WebSocket
 const io = new Server(server, {

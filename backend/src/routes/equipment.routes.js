@@ -1,12 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const equipmentController = require("../controllers/equipment.controller");
 
-// GET equipment list
-router.get("/", (req, res) => {
-  res.json({
-    message: "Equipment route working",
-    equipment: []
-  });
-});
+// GET all equipment
+router.get("/", equipmentController.getAllEquipment);
+
+// POST new equipment
+router.post("/", equipmentController.createEquipment);
 
 module.exports = router;

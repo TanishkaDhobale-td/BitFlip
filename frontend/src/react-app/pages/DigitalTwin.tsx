@@ -100,34 +100,6 @@ export default function DigitalTwinPage() {
               </Card>
             </motion.div>
 
-            {/* Feature Cards - Horizontal Row */}
-            <div className="grid md:grid-cols-3 gap-4 mb-6">
-              {[
-                { icon: Eye, title: "Real-time Visualization", desc: "Watch your CNC machine operate in real-time with synchronized 3D rendering.", color: "bg-blue-100", iconColor: "text-blue-600" },
-                { icon: Activity, title: "Component Health Insights", desc: "Click on any component to view detailed health metrics and historical data.", color: "bg-green-100", iconColor: "text-green-600" },
-                { icon: AlertTriangle, title: "AI Risk Highlighting", desc: "Components at risk are automatically highlighted with severity indicators.", color: "bg-amber-100", iconColor: "text-amber-600" },
-              ].map((feature, index) => (
-                <ScrollReveal key={index} delay={index * 0.1}>
-                  <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2 }}>
-                    <Card className="p-5 hover:shadow-lg transition-all duration-300">
-                      <div className="flex items-start gap-4">
-                        <motion.div 
-                          className={cn("w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0", feature.color)}
-                          whileHover={{ scale: 1.1, rotate: 5 }}
-                        >
-                          <feature.icon className={cn("w-5 h-5", feature.iconColor)} />
-                        </motion.div>
-                        <div>
-                          <h4 className="font-semibold text-gray-900 mb-1">{feature.title}</h4>
-                          <p className="text-sm text-gray-600">{feature.desc}</p>
-                        </div>
-                      </div>
-                    </Card>
-                  </motion.div>
-                </ScrollReveal>
-              ))}
-            </div>
-
             {/* Analytics Button */}
             <ScrollReveal>
               <div className="flex justify-center mb-8">
