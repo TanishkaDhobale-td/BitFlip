@@ -29,11 +29,11 @@ interface MachineData {
 }
 
 export default function AnalyticsPage() {
-  const [liveData, setLiveData] = useState<MachineData | null>(null);
+    const [liveData, setLiveData] = useState<MachineData | null>(null);
     const [healthScore, setHealthScore] = useState(100);
     const [diagnosis, setDiagnosis] = useState("");
-    const [preventive, setPreventive] = useState("");
-    const [prediction, setPrediction] = useState("");
+    const [preventiveTasks, setPreventiveTasks] = useState<any[]>([]);
+    const [futurePredictions, setFuturePredictions] = useState<any[]>([]);
 
   useEffect(() => {
     const socket = io("http://127.0.0.1:5000", {
@@ -87,23 +87,77 @@ export default function AnalyticsPage() {
       setDiagnosis("Motor Performance Normal");
     }
 
-    // Preventive
+    // PreventiveTasks
+    let tasks = [];
+
     if (vib > 6) {
-      setPreventive("Spindle bearing inspection within 48 hours");
-    } else if (temp > 80) {
-      setPreventive("Coolant system check within 1 week");
-    } else {
-      setPreventive("Routine monitoring recommended");
+       tasks.push({
+        task: "Spindle bearing inspection",
+        priority: "High",
+        due: "Within 48 hours",
+        progress: 0
+      });
+    }
+    if (temp > 80) {
+      tasks.push({
+        task: "Coolant system check",
+        priority: "Medium",
+        due: "Within 1 week",
+        progress: 20
+      });
     }
 
-    // Future Prediction
-    if (vib > 7) {
-      setPrediction("Spindle Bearing: 30 days remaining");
-    } else if (temp > 90) {
-      setPrediction("Motor Failure Risk: 20 days remaining");
-    } else {
-      setPrediction("All components stable (120+ days life)");
+    if (speed > 4800) {
+      tasks.push({
+        task: "Spindle load balancing",
+        priority: "Medium",
+        due: "Within 5 days",
+        progress: 10
+      });
     }
+
+    if (tasks.length === 0) {
+      tasks.push({
+        task: "Routine monitoring",
+        priority: "Low",
+        due: "No urgent action",
+        progress: 80
+      });
+    }
+
+    setPreventiveTasks(tasks);
+
+    // Future Prediction
+    let predictions = [];
+
+    if (vib > 7) {
+      predictions.push({
+        name: "Spindle Bearing",
+        days: "30 days",
+        condition: "High vibration wear detected",
+        color: "text-red-600"
+      });
+    }
+
+    if (temp > 90) {
+      predictions.push({
+        name: "Drive Motor",
+        days: "20 days",
+        condition: "Overheating risk",
+        color: "text-red-600"
+      });
+    }
+
+    if (predictions.length === 0) {
+      predictions.push({
+        name: "All Components",
+        days: "120+ days",
+        condition: "Stable operation",
+        color: "text-green-600"
+      });
+    }
+
+    setFuturePredictions(predictions);
   }
 
   const healthColor =
@@ -197,6 +251,71 @@ export default function AnalyticsPage() {
               </div>
             )}
           </Card>
+
+          {/* Preventive Maintenance */}
+        <Card className="p-6 mb-6">
+          <h3 className="text-lg font-semibold mb-4">
+            Preventive Maintenance
+          </h3>
+
+          <div className="space-y-4">
+            {preventiveTasks.map((item, index) => (
+              <div
+                key={index}
+                className="p-4 bg-gray-50 rounded-xl"
+              >
+                <div className="flex justify-between mb-2">
+                  <span className="font-medium">{item.task}</span>
+                  <span
+                    className={cn(
+                      "text-xs px-2 py-1 rounded-full",
+                      item.priority === "High"
+                        ? "bg-red-100 text-red-700"
+                        : item.priority === "Medium"
+                        ? "bg-amber-100 text-amber-700"
+                        : "bg-green-100 text-green-700"
+                    )}
+                  >
+                    {item.priority}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-500 mb-2">{item.due}</p>
+                <Progress value={item.progress} className="h-1.5" />
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        {/* Future Failure Prediction */}
+        <Card className="p-6">
+          <h3 className="text-lg font-semibold mb-4">
+            Future Failure Prediction
+          </h3>
+
+          <div className="space-y-4">
+            {futurePredictions.map((item, index) => (
+              <div
+                key={index}
+                className="flex justify-between p-4 bg-gray-50 rounded-xl"
+              >
+                <div>
+                  <p className="font-medium">{item.name}</p>
+                  <p className="text-sm text-gray-500">
+                    Estimated life remaining
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className={cn("text-2xl font-bold", item.color)}>
+                    {item.days}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {item.condition}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
 
    {/* Middle Row */}
         <div className="grid md:grid-cols-2 gap-6 mb-6">
